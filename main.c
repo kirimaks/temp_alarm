@@ -22,13 +22,13 @@ int8_t check_temp(char *str_temp, char *cur_mode)
 {   /* To do a lot. */
     int cur_temp = atoi(str_temp);
 
-    if (cur_temp >= THRESHOLD) {    /* Go to powersave mode. */
+    if (cur_temp >= MAX_THRESHOLD) {    /* Go to powersave mode. */
         /*printf("High temperature.\n");*/
         if (strncmp(cur_mode, "powersave", 9)) {
             /*printf("*** Write powersave mode ***\n");*/
             system("for c in $(ls -d /sys/devices/system/cpu/cpu[0-9]*); do echo powersave >$c/cpufreq/scaling_governor; done");
         }
-    } else if (cur_temp <= 65) {    /* Go to ondemand mode */
+    } else if (cur_temp <= MIN_THRESHOLD) {    /* Go to ondemand mode */
         /*printf("Low temperature.\n");*/
         if (strncmp(cur_mode, "ondemand", 8)) {
             /*printf("*** Write ondemand mode ***\n");*/
@@ -37,7 +37,7 @@ int8_t check_temp(char *str_temp, char *cur_mode)
     }
 
     /* Should return not zero for make notify send. */
-    return (cur_temp >= THRESHOLD) ? cur_temp : 0;
+    return (cur_temp >= MAX_THRESHOLD) ? cur_temp : 0;
 }
 
 int main(int argc, char **argv)
